@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.dboy.base.notify.NotificationControl
 import com.dboy.base.notify.listener.PendingIntentListener
+import com.dboy.basenotification.service.NotifyService
 
 class MainActivity : AppCompatActivity(), PendingIntentListener {
 

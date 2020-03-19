@@ -1,19 +1,20 @@
-package com.dboy.basenotification;
+package com.dboy.basenotification.notify;
 
 import androidx.core.app.NotificationCompat;
 
 import com.dboy.base.notify.view.BaseRemoteViews;
 import com.dboy.base.notify.view.ContentRemote;
+import com.dboy.basenotification.R;
+import com.dboy.basenotification.channel.MessageChannelNotify;
 
 import org.jetbrains.annotations.NotNull;
 
-public class QuickNotify extends BaseNotify<String> {
-
+public class CommonNotify extends MessageChannelNotify<String> {
 
     /**
      * @param mData 适配你的数据 并在super之后添加你的Remote的layout id
      */
-    public QuickNotify(@NotNull String mData) {
+    public CommonNotify(@NotNull String mData) {
         super(mData);
         addContentRemoteViews(R.layout.notify_test_layout);
     }
@@ -22,7 +23,7 @@ public class QuickNotify extends BaseNotify<String> {
     public void convert(@NotNull BaseRemoteViews mBaseRemoteViews, @NotNull String mData) {
         ContentRemote contentRemote = mBaseRemoteViews.getContentRemote();
         if (contentRemote != null) {
-            contentRemote.setTextViewText(R.id.contentText,mData);
+            contentRemote.setTextViewText(R.id.contentText, mData);
             contentRemote.setOnClickPendingIntent(getNotificationId(), R.id.contentText);
         }
     }
@@ -30,11 +31,14 @@ public class QuickNotify extends BaseNotify<String> {
     @Override
     public void configureNotify(@NotNull NotificationCompat.Builder mBuilder) {
         mBuilder.setSmallIcon(R.mipmap.ic_launcher);
-        mBuilder.setOngoing(true);
+        mBuilder.setShowWhen(true)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setGroup("comm");
     }
 
     @Override
     public int getNotificationId() {
-        return 10;
+        return 11;
     }
 }
