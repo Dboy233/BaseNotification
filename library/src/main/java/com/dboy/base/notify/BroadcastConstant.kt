@@ -10,7 +10,7 @@ object BroadcastConstant {
     /**
      * 点击事件触发的通知栏id
      */
-    val ACTION_NOTIFY_CLICK_ID = "notifyID"
+    val ACTION_NOTIFY_CLICK_NOTIFY_ID = "notifyID"
     /**
      * 点击事件广播接收器接收 action
      */

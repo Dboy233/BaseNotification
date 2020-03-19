@@ -1,7 +1,9 @@
 package com.dboy.base.notify.view
 
-import android.widget.RemoteViews
 import com.dboy.base.notify.utils.ContextUtil
 
-open class TickerRemote(layoutId: Int) : AbRemoteViews(ContextUtil.getApplication().packageName,layoutId)  {
+open class TickerRemote(var  tickerText: CharSequence?="", layoutId: Int) :
+    AbRemoteViews(ContextUtil.getApplication().packageName, layoutId) {
+
+
 }

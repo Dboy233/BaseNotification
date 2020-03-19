@@ -3,12 +3,12 @@ package com.dboy.base.notify.view
 
  data class BaseRemoteViews(
 
-    var mBigRemote: BigRemote? = null,
+     var bigRemote: BigRemote?=null,
 
-    var mContentRemote: ContentRemote? = null,
+     var contentRemote: ContentRemote?=null,
 
-    var mCustomRemote: CustomRemote? = null,
+     var customContentRemote: CustomRemote?=null,
 
-    var mTickerRemote: TickerRemote? = null
+     var tickerRemote: TickerRemote?=null
 
 )

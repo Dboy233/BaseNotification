@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import com.dboy.base.notify.BroadcastConstant.ACTION_NOTIFY_CLICK
-import com.dboy.base.notify.BroadcastConstant.ACTION_NOTIFY_CLICK_ID
+import com.dboy.base.notify.BroadcastConstant.ACTION_NOTIFY_CLICK_NOTIFY_ID
 import com.dboy.base.notify.BroadcastConstant.ACTION_NOTIFY_CLICK_VIEW_ID
 import com.dboy.base.notify.listener.PendingIntentListener
 import com.dboy.base.notify.utils.ContextUtil
@@ -30,9 +30,14 @@ class BaseNotifyBroadcast : BroadcastReceiver {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent != null) {
-            val action = intent.action
-            val viewId = intent.getIntExtra(ACTION_NOTIFY_CLICK_VIEW_ID, 0)
-            val notifyId = intent.getIntExtra(ACTION_NOTIFY_CLICK_ID, -1)
+            val action = intent.action!!
+            if (action == ACTION_NOTIFY_CLICK) {
+                val viewId = intent.getIntExtra(ACTION_NOTIFY_CLICK_VIEW_ID, 0)
+                val notifyId = intent.getIntExtra(ACTION_NOTIFY_CLICK_NOTIFY_ID, -1)
+                arrayList.map {
+                    it.onClick(notifyId, viewId)
+                }
+            }
         }
     }
 
@@ -53,6 +58,12 @@ class BaseNotifyBroadcast : BroadcastReceiver {
     open fun addPendingIntentListener(pendingIntentListener: PendingIntentListener) {
         if (!arrayList.contains(pendingIntentListener)) {
             arrayList.add(pendingIntentListener)
+        }
+    }
+
+    open fun removePendingIntentListener(pendingIntentListener: PendingIntentListener) {
+        if (arrayList.contains(pendingIntentListener)) {
+            arrayList.remove(pendingIntentListener)
         }
     }
 

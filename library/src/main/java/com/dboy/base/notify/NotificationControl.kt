@@ -10,9 +10,18 @@ object NotificationControl {
     val mNotificationManagerCompat: NotificationManagerCompat =
         NotificationManagerCompat.from(ContextUtil.getApplication().baseContext)
 
-
-    fun addPendingIntentListener(pendingIntentListener: PendingIntentListener){
+    /**
+     * 添加点击事件监听器 监听所有通知
+     */
+    fun addPendingIntentListener(pendingIntentListener: PendingIntentListener) {
         BaseNotifyBroadcast.INSTANCE.addPendingIntentListener(pendingIntentListener)
+    }
+
+    /**
+     * 移除监听器
+     */
+    fun removePendingIntentListener(pendingIntentListener: PendingIntentListener) {
+        BaseNotifyBroadcast.INSTANCE.removePendingIntentListener(pendingIntentListener)
     }
 
     /**
