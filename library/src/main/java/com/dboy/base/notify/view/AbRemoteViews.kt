@@ -27,7 +27,7 @@ open class AbRemoteViews(packageName: String?, layoutId: Int) :
         intent.putExtra(ACTION_NOTIFY_CLICK_NOTIFY_ID, notifyId)
         val pendingIntent = PendingIntent.getBroadcast(
             ContextUtil.getApplication(),
-            notifyId,
+            viewId,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -42,7 +42,7 @@ open class AbRemoteViews(packageName: String?, layoutId: Int) :
         intent.putExtra(ACTION_NOTIFY_CLICK_NOTIFY_ID, notifyId)
         val pendingIntent = PendingIntent.getBroadcast(
             ContextUtil.getApplication(),
-            notifyId,
+            viewId,
             intent,
             flags
         )
