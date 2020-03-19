@@ -35,6 +35,21 @@ open class AbRemoteViews(packageName: String?, layoutId: Int) :
         return this
     }
 
+    fun setOnClickPendingIntent2(notifyId: Int, viewId: Int, flags: Int): AbRemoteViews {
+        val intent: Intent =
+            Intent(ACTION_NOTIFY_CLICK).setPackage(ContextUtil.getApplication().packageName)
+        intent.putExtra(ACTION_NOTIFY_CLICK_VIEW_ID, viewId)
+        intent.putExtra(ACTION_NOTIFY_CLICK_NOTIFY_ID, notifyId)
+        val pendingIntent = PendingIntent.getBroadcast(
+            ContextUtil.getApplication(),
+            notifyId,
+            intent,
+            flags
+        )
+        super.setOnClickPendingIntent(viewId, pendingIntent)
+        return this
+    }
+
 
     open fun addView2(viewId: Int, nestedView: RemoteViews?): AbRemoteViews {
         super.addView(viewId, nestedView)
