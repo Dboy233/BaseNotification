@@ -23,8 +23,8 @@ public class CommonNotify extends MessageChannelNotify<String> {
     public void convert(@NotNull BaseRemoteViews mBaseRemoteViews, @NotNull String mData) {
         ContentRemote contentRemote = mBaseRemoteViews.getContentRemote();
         if (contentRemote != null) {
-            contentRemote.setTextViewText(R.id.contentText, mData);
-            contentRemote.setOnClickPendingIntent(getNotificationId(), R.id.contentText);
+            contentRemote.setTextViewText2(R.id.contentText, mData)
+                    .setOnClickPendingIntent2(getNotificationId(), R.id.contentText);
         }
     }
 

@@ -13,7 +13,7 @@ import com.dboy.base.notify.view.BaseRemoteViews;
 import org.jetbrains.annotations.NotNull;
 
 /**
- *  业务基类一底层主要就是配置渠道，设置默认icon
+ *  业务基类一底层主要就是配置渠道
  * @param <T>
  */
 public abstract class MessageChannelNotify<T> extends BaseNotification<T> {
