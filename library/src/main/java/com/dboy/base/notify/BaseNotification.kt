@@ -48,7 +48,7 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
     private val mBaseRemoteViews: BaseRemoteViews = BaseRemoteViews()
 
     /**
-     * 初始化通知渠道
+     * 初始化通知渠道 让base渠道类继承并实现。同一个渠道不会二次执行配置
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     final override fun initChannel() {
@@ -56,15 +56,15 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
         var notificationChannel =
             mNotificationManagerCompat.getNotificationChannel(mContext.packageName)
         if (notificationChannel == null) {
-            //为用户配置默认渠道
+            //为用户配置默认渠道 让用户配置 并创建 如果渠道已经创建了，就不做任何操作 不重建渠道
             notificationChannel = NotificationChannel(
                 mContext.packageName,
                 getChannelName(),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
+            configureChannel(notificationChannel)
+            mNotificationManagerCompat.createNotificationChannel(notificationChannel)
         }
-        configureChannel(notificationChannel)
-        mNotificationManagerCompat.createNotificationChannel(notificationChannel)
     }
 
     /**
