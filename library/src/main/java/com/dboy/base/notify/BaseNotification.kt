@@ -17,7 +17,7 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
     /**
      * 数据
      */
-    protected val data: T
+    protected var data: T
 
     /**
      * @param 配置你的数据
@@ -126,8 +126,9 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
     /**
      * 显示 并配置数据
      */
-    override fun show(mData: T) {
-        convert(mBaseRemoteViews, mData)
+    override fun show(data: T) {
+        this.data = data
+        convert(mBaseRemoteViews, data)
         configureRemote()
         mNotificationManagerCompat.notify(getNotificationId(), mBuilder.build())
     }
@@ -144,8 +145,9 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
      * 显示为前台通知 并配置数据
      * android.permission.FOREGROUND_SERVICE
      */
-    override fun show(service: Service, mData: T) {
-        convert(mBaseRemoteViews, mData)
+    override fun show(service: Service, data: T) {
+        this.data = data
+        convert(mBaseRemoteViews, data)
         configureRemote()
         service.startForeground(getNotificationId(), mBuilder.build())
     }
@@ -162,8 +164,9 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
      * 显示为前台通知并设置 并配置数据
      * android.permission.FOREGROUND_SERVICE
      */
-    override fun show(service: Service, foregroundServiceType: Int, mData: T) {
-        convert(mBaseRemoteViews, mData)
+    override fun show(service: Service, foregroundServiceType: Int, data: T) {
+        this.data = data
+        convert(mBaseRemoteViews, data)
         configureRemote()
         service.startForeground(getNotificationId(), mBuilder.build(), foregroundServiceType)
     }
@@ -198,7 +201,7 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
     /**
      * 配置数据
      */
-    abstract fun convert(mBaseRemoteViews: BaseRemoteViews, mData: T)
+    abstract fun convert(mBaseRemoteViews: BaseRemoteViews, data: T)
 
     /**
      * 配置用户的渠道

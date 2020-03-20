@@ -23,10 +23,10 @@ public class QuickNotify extends MessageChannelNotify<String> {
     }
 
     @Override
-    public void convert(@NotNull BaseRemoteViews mBaseRemoteViews, @NotNull String mData) {
+    public void convert(@NotNull BaseRemoteViews mBaseRemoteViews, @NotNull String data) {
         ContentRemote contentRemote = mBaseRemoteViews.getContentRemote();
         if (contentRemote != null) {
-            contentRemote.setTextViewText2(R.id.contentText, mData).
+            contentRemote.setTextViewText2(R.id.contentText, data).
                     setOnClickPendingIntent2(getNotificationId(), R.id.contentText);
         }
     }
