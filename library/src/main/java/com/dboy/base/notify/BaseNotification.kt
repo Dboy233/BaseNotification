@@ -84,7 +84,7 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
     /**
      * 获取渠道id 默认 报名+0...
      */
-    protected fun getChannelId(): Int {
+    open fun getChannelId(): Int {
         return 0
     }
 
