@@ -24,9 +24,9 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
      */
     constructor(data: T) {
         this.data = data
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            initChannel()
-        }
+
+        initChannel()
+
         initBuilder()
     }
 
@@ -50,32 +50,34 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
     /**
      * 初始化通知渠道 让base渠道类继承并实现。同一个渠道不会二次执行配置
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     final override fun initChannel() {
-        //获取用户的渠道id
-        var notificationChannel = mNotificationManagerCompat.getNotificationChannel(mContext.packageName + getChannelId())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //获取用户的渠道id
+            var notificationChannel =
+                mNotificationManagerCompat.getNotificationChannel(mContext.packageName + getChannelId())
 
-        if (notificationChannel == null) {
+            if (notificationChannel == null) {
 
-            //为用户配置默认渠道 让用户配置 并创建 如果渠道已经创建了，就不做任何操作 不重建渠道
-            notificationChannel = NotificationChannel(
-                mContext.packageName + getChannelId(),
-                getChannelName(),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
+                //为用户配置默认渠道 让用户配置 并创建 如果渠道已经创建了，就不做任何操作 不重建渠道
+                notificationChannel = NotificationChannel(
+                    mContext.packageName + getChannelId(),
+                    getChannelName(),
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
 
-            configureChannel(notificationChannel)
+                configureChannel(notificationChannel)
 
-            mNotificationManagerCompat.createNotificationChannel(notificationChannel)
+                mNotificationManagerCompat.createNotificationChannel(notificationChannel)
+            }
         }
-
     }
 
     /**
      * 初始化通知
      */
     final override fun initBuilder() {
-        mBuilder = NotificationCompat.Builder(mContext, mContext.packageName+getChannelId())
+        mBuilder = NotificationCompat.Builder(mContext, mContext.packageName + getChannelId())
         configureNotify(mBuilder)
     }
 

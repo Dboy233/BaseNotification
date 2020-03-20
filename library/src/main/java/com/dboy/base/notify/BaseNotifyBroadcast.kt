@@ -41,12 +41,18 @@ class BaseNotifyBroadcast : BroadcastReceiver {
         }
     }
 
+    /**
+     * 注册广播
+     */
     fun register() {
         val intentFilter = IntentFilter()
         intentFilter.addAction(ACTION_NOTIFY_CLICK)
         ContextUtil.getApplication().registerReceiver(this, intentFilter)
     }
 
+    /**
+     * 移除广播
+     */
     fun onDestroy() {
         arrayList.clear()
         ContextUtil.getApplication().unregisterReceiver(this)
@@ -61,6 +67,9 @@ class BaseNotifyBroadcast : BroadcastReceiver {
         }
     }
 
+    /**
+     * 移除点击事件监听器
+     */
     open fun removePendingIntentListener(pendingIntentListener: PendingIntentListener) {
         if (arrayList.contains(pendingIntentListener)) {
             arrayList.remove(pendingIntentListener)
