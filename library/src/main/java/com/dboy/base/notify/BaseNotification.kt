@@ -17,13 +17,13 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
     /**
      * 数据
      */
-    protected val mData: T
+    protected val data: T
 
     /**
      * @param 配置你的数据
      */
-    constructor(mData: T) {
-        this.mData = mData
+    constructor(data: T) {
+        this.data = data
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             initChannel()
         }
@@ -53,28 +53,38 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
     @RequiresApi(api = Build.VERSION_CODES.O)
     final override fun initChannel() {
         //获取用户的渠道id
-        var notificationChannel =
-            mNotificationManagerCompat.getNotificationChannel(mContext.packageName)
+        var notificationChannel = mNotificationManagerCompat.getNotificationChannel(mContext.packageName + getChannelId())
+
         if (notificationChannel == null) {
+
             //为用户配置默认渠道 让用户配置 并创建 如果渠道已经创建了，就不做任何操作 不重建渠道
             notificationChannel = NotificationChannel(
-                mContext.packageName,
+                mContext.packageName + getChannelId(),
                 getChannelName(),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
+
             configureChannel(notificationChannel)
+
             mNotificationManagerCompat.createNotificationChannel(notificationChannel)
         }
+
     }
 
     /**
      * 初始化通知
      */
     final override fun initBuilder() {
-        mBuilder = NotificationCompat.Builder(mContext, mContext.packageName)
+        mBuilder = NotificationCompat.Builder(mContext, mContext.packageName+getChannelId())
         configureNotify(mBuilder)
     }
 
+    /**
+     * 获取渠道id 默认 报名+0...
+     */
+    protected fun getChannelId(): Int {
+        return 0
+    }
 
     /**
      * 添加大图
@@ -108,7 +118,7 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
      * 显示
      */
     override fun show() {
-        show(mData)
+        show(data)
     }
 
     /**
@@ -125,7 +135,7 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
      * android.permission.FOREGROUND_SERVICE
      */
     override fun show(service: Service) {
-        show(service, mData)
+        show(service, data)
     }
 
     /**
@@ -143,7 +153,7 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
      * android.permission.FOREGROUND_SERVICE
      */
     override fun show(service: Service, foregroundServiceType: Int) {
-        show(service, foregroundServiceType, mData)
+        show(service, foregroundServiceType, data)
     }
 
     /**
