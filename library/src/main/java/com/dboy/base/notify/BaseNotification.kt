@@ -55,7 +55,7 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //获取用户的渠道id
             var notificationChannel =
-                mNotificationManagerCompat.getNotificationChannel(mContext.packageName + getChannelId())
+                mNotificationManagerCompat.getNotificationChannel(mContext.packageName + ":" + getChannelId())
 
             if (notificationChannel == null) {
 
@@ -77,12 +77,12 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
      * 初始化通知
      */
     final override fun initBuilder() {
-        mBuilder = NotificationCompat.Builder(mContext, mContext.packageName + getChannelId())
+        mBuilder = NotificationCompat.Builder(mContext, mContext.packageName + ":" + getChannelId())
         configureNotify(mBuilder)
     }
 
     /**
-     * 获取渠道id 默认 报名+0...
+     * 获取渠道id 默认 {你的app报名:0} 重写这个方法，返回你的id
      */
     open fun getChannelId(): Int {
         return 0
