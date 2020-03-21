@@ -13,22 +13,7 @@ import com.dboy.base.notify.view.BigRemote
 import com.dboy.base.notify.view.ContentRemote
 import com.dboy.base.notify.view.TickerRemote
 
-abstract class BaseNotification<T : Any> : IBaseNotify<T> {
-    /**
-     * 数据
-     */
-    protected var data: T
-
-    /**
-     * @param 配置你的数据
-     */
-    constructor(data: T) {
-        this.data = data
-
-        initChannel()
-
-        initBuilder()
-    }
+abstract class BaseNotification<T : Any>(open var data: T) : IBaseNotify<T> {
 
     /**
      * Base上下文
@@ -47,6 +32,12 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
      */
     private val mBaseRemoteViews: BaseRemoteViews = BaseRemoteViews()
 
+
+    init {
+        initChannel()
+        initBuilder()
+    }
+
     /**
      * 初始化通知渠道 让base渠道类继承并实现。同一个渠道不会二次执行配置
      */
@@ -55,13 +46,13 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //获取用户的渠道id
             var notificationChannel =
-                mNotificationManagerCompat.getNotificationChannel(mContext.packageName + ":" + getChannelId())
+                mNotificationManagerCompat.getNotificationChannel(getChannelIdStr())
 
             if (notificationChannel == null) {
 
                 //为用户配置默认渠道 让用户配置 并创建 如果渠道已经创建了，就不做任何操作 不重建渠道
                 notificationChannel = NotificationChannel(
-                    mContext.packageName + getChannelId(),
+                    getChannelIdStr(),
                     getChannelName(),
                     NotificationManager.IMPORTANCE_DEFAULT
                 )
@@ -77,15 +68,15 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
      * 初始化通知
      */
     final override fun initBuilder() {
-        mBuilder = NotificationCompat.Builder(mContext, mContext.packageName + ":" + getChannelId())
+        mBuilder = NotificationCompat.Builder(mContext, getChannelIdStr())
         configureNotify(mBuilder)
     }
 
     /**
-     * 获取渠道id 默认 {你的app报名:0} 重写这个方法，返回你的id
+     * 获取srt类型的ChannelId 形式为 {你的app报名:getChannelId()}
      */
-    open fun getChannelId(): Int {
-        return 0
+    private fun getChannelIdStr():String {
+        return mContext.packageName +":"+ getChannelId()
     }
 
     /**
@@ -225,5 +216,8 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
      */
     abstract fun getNotificationId(): Int
 
-
+    /**
+     * 获取渠道id  最终类型为 {你的app报名:0} 的字符串
+     */
+    abstract fun getChannelId(): Int
 }

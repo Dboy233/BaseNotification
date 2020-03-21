@@ -39,4 +39,11 @@ public abstract class MessageChannelNotify<T> extends BaseNotification<T> {
         notificationChannel.setSound(null,null);
         notificationChannel.setImportance(NotificationManager.IMPORTANCE_HIGH);
     }
+
+    @Override
+    public int getChannelId() {
+        return 10;
+    }
+
+
 }
