@@ -61,7 +61,7 @@ class BaseNotifyBroadcast : BroadcastReceiver {
     /**
      * 添加监听器
      */
-    open fun addPendingIntentListener(pendingIntentListener: PendingIntentListener) {
+    fun addPendingIntentListener(pendingIntentListener: PendingIntentListener) {
         if (!arrayList.contains(pendingIntentListener)) {
             arrayList.add(pendingIntentListener)
         }
@@ -70,7 +70,7 @@ class BaseNotifyBroadcast : BroadcastReceiver {
     /**
      * 移除点击事件监听器
      */
-    open fun removePendingIntentListener(pendingIntentListener: PendingIntentListener) {
+    fun removePendingIntentListener(pendingIntentListener: PendingIntentListener) {
         if (arrayList.contains(pendingIntentListener)) {
             arrayList.remove(pendingIntentListener)
         }
