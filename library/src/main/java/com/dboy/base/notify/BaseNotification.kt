@@ -112,7 +112,7 @@ abstract class BaseNotification<T : Any> : IBaseNotify<T> {
     /**
      * 添加自定义视图
      */
-    protected fun addCustomCustomRemoteView(layoutId: Int) {
+    protected fun addCustomContentRemoteView(layoutId: Int) {
         mBaseRemoteViews.customContentRemote
     }
 
