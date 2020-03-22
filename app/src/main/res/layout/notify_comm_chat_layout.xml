@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notify_chat_layout"
+    android:layout_width="match_parent"
+    android:layout_height="66dp"
+    android:background="@drawable/shape_comm_bg"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:id="@+id/notify_chat_head_img"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="24dp"
+            tools:src="@mipmap/ic_launcher" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/notify_chat_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#3b3b3b"
+                android:textSize="14sp"
+                tools:text="小明来信" />
+
+            <TextView
+                android:id="@+id/notify_chat_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textSize="12sp"
+                tools:text="今晚吃什么午饭？" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

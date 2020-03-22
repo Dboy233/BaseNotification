@@ -219,5 +219,5 @@ abstract class BaseNotification<T : Any>(open var data: T) : IBaseNotify<T> {
     /**
      * 获取渠道id  最终类型为 {你的app报名:0} 的字符串
      */
-    abstract fun getChannelId(): Int
+    abstract fun getChannelId(): String
 }

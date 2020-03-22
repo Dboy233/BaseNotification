@@ -9,24 +9,19 @@ import com.dboy.base.notify.NotificationControl
 import com.dboy.base.notify.listener.PendingIntentListener
 import com.dboy.basenotification.service.NotifyService
 
-class MainActivity : AppCompatActivity(), PendingIntentListener {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        NotificationControl.addPendingIntentListener(this)
     }
 
-    fun showNotify(view: View) {
-        startService(Intent(this, NotifyService::class.java))
+    fun showChatActivity(view: View) {
+        startActivity(Intent(this, ChatActivity::class.java))
     }
 
-    override fun onClick(notifyId: Int, viewId: Int) {
-        Log.d("Notify", "notifyId = " + notifyId + " view ID =" + viewId)
+    fun showWarningActivity(view: View) {
+        startActivity(Intent(this, WarningActivity::class.java))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        NotificationControl.releaseAll()
-    }
 }
