@@ -55,6 +55,10 @@ public abstract class ChatChannelNotify<T extends BaseNotificationData> extends 
                 .setSmallIcon(getData().getSmallIcon())
                 .setContentTitle(getData().getContentTitle())
                 .setContentText(getData().getContentText())
+                .setTicker(getData().getContentTitle())
+                .setContentInfo(getData().getContentText())
+                .setAutoCancel(true)
+                .setSubText(getData().getContentText())
                 .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setGroup("chat");

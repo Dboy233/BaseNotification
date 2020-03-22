@@ -28,17 +28,11 @@ public class CommChatNotify extends ChatChannelNotify<ChatData> {
         ContentRemote contentRemote = mBaseRemoteViews.getContentRemote();
         if (contentRemote != null) {
             contentRemote
-                    .setImageViewResource2(R.id.notify_chat_head_img,data.getIcon())
+                    .setImageViewResource2(R.id.notify_chat_head_img, data.getIcon())
                     .setTextViewText2(R.id.notify_chat_title, data.getContentTitle())
                     .setTextViewText2(R.id.notify_chat_subtitle, data.getContentText())
                     .setOnClickPendingIntent2(getNotificationId(), R.id.notify_chat_layout);
         }
-    }
-
-    @Override
-    public void configureNotify(@NotNull NotificationCompat.Builder mBuilder) {
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
-
     }
 
     @Override
