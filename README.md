@@ -414,19 +414,91 @@ abstract class BaseNotification<T : Any>(open var data: T) : IBaseNotify<T> {
 }
 ```
 
-##### 对于这个基类的封装也是非常的简单明了。我想大家仔细阅读一番便可知晓；
+##### 对于这个基类的封装也是非常的简单明了；
+
+##### 它实现了[NotificationChannel]()和[NotificationCompat.Builder]()的初始化；
+
+##### 通过抽象方法让子类返回初始化所需要的channelId、channelName和notifyId；
+
+##### 在通过[configureChannel(channel : NotificationChannel)]()和[configureBuilder(builder : NotificationCompat.Builder()]() 让子类取实现并获取channel和builder实例取配置自己所需要的属性；让最上层实现通知的 [初始化、发布、取消]() 等这样基础的通用功能；
+
+##### 再让第一个子类也就是继承[BaseNotification](https://github.com/Dboy233/BaseNotification)的类我定义为channel类，比如说[ChatChannelNotify]()让它如设置渠道的属性，和旗下同渠道的通知的通用属性。
+
+###### 注：我的代码中用到了大量的kotlin和java混合开发的。不过我的封装都是kotlin，实现都是java，这也是为了照顾java用户
+
+```java
+/**
+ * 业务基类一底层主要就是配置渠道 设置旗下通知的共同属性
+ * 这里我定义了一个BaseNotificationData里面主要就是对数据的统一可以不用，仅供参考吧。
+ * @param <T> 
+ */
+public abstract class ChatChannelNotify<T extends BaseNotificationData> extends BaseNotification<T> {
+
+    /**
+     * @param mData 适配你的数据 并在super之后添加你的Remote的layout id
+     */
+    public ChatChannelNotify(@NotNull T mData) {
+        super(mData);
+    }
+	//设置渠道名字 我把它写在了配置类中
+    @NotNull
+    @Override
+    public String getChannelName() {
+        return NotificationConfig.CHANNEL_ID_CHAT;
+    }
+	//设置渠道ID 我把它写在了配置类中
+    @NotNull
+    @Override
+    public String getChannelId() {
+        return NotificationConfig.CHANNEL_ID_CHAT;
+    }
+	//设置渠道的属性
+    @Override
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void configureChannel(@NotNull NotificationChannel notificationChannel) {
+        notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        notificationChannel.setImportance(NotificationManager.IMPORTANCE_HIGH);
+    }
+
+	//设置渠道下通知的共同属性
+    @Override
+    public void configureNotify(@NotNull NotificationCompat.Builder mBuilder) {
+        //设置通知的共同属性
+        mBuilder.setShowWhen(true)
+                .setSmallIcon(getData().getSmallIcon())
+                .setContentTitle(getData().getContentTitle())
+                .setContentText(getData().getContentText())
+                .setTicker(getData().getContentTitle())
+                .setContentInfo(getData().getContentText())
+                .setAutoCancel(true)
+                .setSubText(getData().getContentText())
+                .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setGroup("chat");
+    }
+	//有几个方法channel类无需实现，让具体的通知类去实现完成
+    //abstract fun convert(mBaseRemoteViews: BaseRemoteViews, data: T)
+    //abstract fun getChannelId(): Int
+    //
+	//add***RemoteViews(layoutId:Int) 通知类调用
+}
+```
+
+##### 通过上面的代码，我们就完成了Channel的封装，和旗下同渠道通知的配置。使得书写一个通知变得方便简洁。
+
+##### 对业务可扩展和新人添加业务变得简单起来。
 
 
 
-##### 大家肯定发现了，我对[RemoteViews]()和它的数据进行了封装，这其实是我封装的关键地方
+##### *大家肯定发现了，我对[RemoteViews]()和它的数据进行了封装，这其实是我封装的关键地方；*
 
 
 
 ### 我们来讲一下[RemoteViews]()
 
-##### 它是自定义通知展示内容的关键，有很多通知都是自定义视图的。
+##### 它是自定义通知展示内容的关键，有很多通知都是自定义布局视图的。M信、Mq、M宝等等，很少有使用原生通知样式的。不信你看看。除了海外和谷歌自家app，国内厂商无一例外。
 
-##### 通过设置[NotificationCompat.Builder]()属性来实现
+##### 通过设置[NotificationCompat.Builder]()属性来设置自定义layout布局，不过传入的对象却是个RemoteViews，新手肯定一脸懵逼了。
 
 ```java
 mBuilder.setCustomContentView(RemoteViews)
@@ -438,9 +510,7 @@ mBuilder.setCustomBigContentView(RemoteViews)
 mBuilder.setTicker(tickerText, RemoteViews)
 ```
 
-##### 而点击事件和内容的设置，却又很繁琐。于是我对[RemoteViews]()也进行了封装
-
-#### 对期点击事件和属性的设置进行了调整优化；
+##### 而点击事件和内容的设置，却又很繁琐。于是我对[RemoteViews]()也进行了封装改造，对其点击事件和属性的设置进行了调整优化；
 
 ##### 通知栏中的点击时间要通过[PendingIntent]()发送广播或者sendIntent实现页面跳转点击回调；
 
@@ -470,7 +540,11 @@ fun setOnClickPendingIntent2(notifyId: Int, viewId: Int): AbRemoteViews {
 }
 ```
 
-##### 分别创建
+##### 对这个点击事件的封装又能解决一大批问题，组件化开发模式下，用广播传递点击事件，解决无法引用目标活动类的问题。而且我不只是封装了这一个方法，我将所有的方法都实现了，使用了构建者模式。让开发者使用的时候直接链式调用方便快捷。使用以2结尾的方法，即可实现链式调用，原方法也保留了使用。大家可以去我的源码中查看。
+
+
+
+##### 然后分别创建几个子类
 
 ```kotlin
 open class BigRemote(layoutId: Int) : AbRemoteViews(ContextUtil.getApplication().packageName,layoutId) 
@@ -486,7 +560,46 @@ open class TickerRemote(var  tickerText: CharSequence?="", layoutId: Int) :
 
 ##### 来向开发者标明我所自定义的[RemoteViews]()的具体位置类别；
 
-##### 再使用一个类将他们统一使用；
+##### 这几个类分别对应了这几个方法。让[BaseNotification](https://github.com/Dboy233/BaseNotification)根据类别去完成set方法。
+
+```java
+mBuilder.setCustomContentView(RemoteViews)
+
+mBuilder.setContent(RemoteViews)
+
+mBuilder.setCustomBigContentView(RemoteViews)
+
+mBuilder.setTicker(tickerText, RemoteViews)
+```
+
+##### 这是[BaseNotification](https://github.com/Dboy233/BaseNotification)中的实现方法
+
+```kotlin
+
+    /**
+     * 配置视图
+     */
+    private fun configureRemote() {
+        mBaseRemoteViews.customContentRemote?.let {
+            mBuilder.setCustomContentView(it)
+        }
+        mBaseRemoteViews.contentRemote?.let {
+            mBuilder.setContent(it)
+        }
+        mBaseRemoteViews.bigRemote?.let {
+            mBuilder.setCustomBigContentView(it)
+        }
+        mBaseRemoteViews.tickerRemote?.let { tickerRemote ->
+            tickerRemote.tickerText?.let { tickerText ->
+                mBuilder.setTicker(tickerText, tickerRemote)
+            }
+        }
+    }
+```
+
+
+
+##### 再使用一个类将他们统一使用；让具体的通知类去设置他们
 
 ```kotlin
 data class BaseRemoteViews(
@@ -500,6 +613,53 @@ data class BaseRemoteViews(
      var tickerRemote: TickerRemote?=null
 
 )
+//===============================================================
+// 下面是BaseNotification的方法，让通知子类调用，赋值给他们具体的类型实现
+	/**
+     * 添加大图
+     */
+    protected fun addBigRemoteViews(layoutId: Int) {
+        mBaseRemoteViews.bigRemote = BigRemote(layoutId)
+    }
+
+    /**
+     * 添加小图
+     */
+    protected fun addContentRemoteViews(layoutId: Int) {
+        mBaseRemoteViews.contentRemote = ContentRemote(layoutId)
+    }
+
+    /**
+     * 添加TickerView
+     */
+    protected fun addTickerRemoteViews(tickerText: String, layoutId: Int) {
+        mBaseRemoteViews.tickerRemote = TickerRemote(tickerText, layoutId)
+    }
+
+    /**
+     * 添加自定义视图
+     */
+    protected fun addCustomContentRemoteView(layoutId: Int) {
+        mBaseRemoteViews.customContentRemote
+    }
+//================================================================
+
+//下面是具体通知调用位置
+/**
+ * 普通聊天 java 先继承通知渠道类 得到渠道信息。在配置自己的数据
+ */
+public class CommChatNotify extends ChatChannelNotify<ChatData> {
+
+    /**
+     * @param mData 适配你的数据 并在super之后添加你的Remote的layout id
+     */
+    public CommChatNotify(@NotNull ChatData mData) {
+        super(mData);
+        addContentRemoteViews(R.layout.notify_comm_chat_layout);
+    }
+    //。。。。。。未展示的其他方法
+}
+
 ```
 
 
@@ -577,11 +737,13 @@ class BaseNotifyBroadcast : BroadcastReceiver {
 }
 ```
 
-##### 这样我们一个整体的封装结构就完成了
+##### 这样我们一个整体的封装结构就完成了。具体代码，请大家去看我[GitHub](https://github.com/Dboy233/BaseNotification)的源码
 
 
 
 ## 创建我们的工厂
+
+接下来我把具体的流程代码展示出来
 
 ```java
 public abstract class ChatChannelNotify<T> extends BaseNotification<T> {
@@ -596,12 +758,12 @@ public abstract class ChatChannelNotify<T> extends BaseNotification<T> {
     @NotNull
     @Override
     public String getChannelName() {
-        return "消息通知";
+        return "聊天通知";//方便大家理解，我写到了这里，建议大家统一写道一个静态类，方便管理
     }
 	
 	@Override
-    public int getChannelId() {
-        return 1;
+    public String getChannelId() {
+        return "chat"; //方便大家理解，我写到了这里，建议大家统一写道一个静态类，方便管理
     }
 	
     @Override
@@ -620,15 +782,11 @@ public abstract class ChatChannelNotify<T> extends BaseNotification<T> {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setGroup("chat");
     }
-
-
-
-
 }
 
 ```
 
-##### 这就是我们的工厂channel 所有与消息相关的通知继承这个抽象的渠道类
+##### 这就是我们的工厂channel， 所有与消息相关的通知继承这个抽象的渠道类
 
 ##### 并实现未实现的方法即可方便的配置自己的通知
 
@@ -653,12 +811,15 @@ public class CommonChatNotify extends ChatChannelNotify<Chat> {
                     .setOnClickPendingIntent2(getNotificationId(), R.id.contentBtn);
         }
     }
-	//即使是渠道类设置了我们这里也可以进行轻微的修改
+	//即使是渠道类设置了我们这里也可以进行轻微的修改 重写这个方法。不要把super给删掉！
     @Override
     public void configureNotify(@NotNull NotificationCompat.Builder mBuilder) {
-        mBuilder.setSmallIcon(getData().getImg());
+        super.configureNotify(mBuilder);
+        mBuilder.setSmallIcon(getData().getIcon());
     }
-	//通知的id
+	//通知的id 这个id可以从data数据中获取 getData().getId()
+    //因为通知都是活的。channel是固定的。所以应该是这样。
+    //但是如果你的通知只有那么几个类型。可以写死在常量类中
     @Override
     public int getNotificationId() {
         return 11;
@@ -675,8 +836,27 @@ chat.show()//显示我们的通知
 //取消通知 chat.cancel()
 ```
 
-##### 由此我们可以有群聊天通知，私密聊天通知，好友聊天通知。
+##### 由此我们可以有[群聊天通知，私密聊天通知，好友聊天]()通知。
 
-##### 统统继承[ChatChannelNotify]()设置不同的布局类型，配置聊天数据。
+##### 统统继承[ChatChannelNotify]()设置不同的布局类型，配置不同的聊天数据。
 
 ##### 完美。
+
+
+
+##### 我将代码已开源，大家可直接使用[BaseNotification](https://github.com/Dboy233/BaseNotification)快速封装自己的业务逻辑
+
+https://github.com/Dboy233/BaseNotification
+
+```css
+   allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+
+	dependencies {
+	        implementation 'com.github.Dboy233:BaseNotification:1.4'
+	}
+```
