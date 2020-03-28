@@ -16,6 +16,7 @@ import com.dboy.base.notify.BroadcastConstant.ACTION_NOTIFY_CLICK
 import com.dboy.base.notify.BroadcastConstant.ACTION_NOTIFY_CLICK_NOTIFY_ID
 import com.dboy.base.notify.BroadcastConstant.ACTION_NOTIFY_CLICK_VIEW_ID
 import com.dboy.base.notify.utils.ContextUtil
+import kotlin.math.abs
 
 open class AbRemoteViews(packageName: String?, layoutId: Int) :
     RemoteViews(packageName, layoutId) {
@@ -25,9 +26,10 @@ open class AbRemoteViews(packageName: String?, layoutId: Int) :
             Intent(ACTION_NOTIFY_CLICK).setPackage(ContextUtil.getApplication().packageName)
         intent.putExtra(ACTION_NOTIFY_CLICK_VIEW_ID, viewId)
         intent.putExtra(ACTION_NOTIFY_CLICK_NOTIFY_ID, notifyId)
+        val requestCode = (0..Int.MAX_VALUE).random() - viewId
         val pendingIntent = PendingIntent.getBroadcast(
             ContextUtil.getApplication(),
-            viewId,
+            abs(requestCode),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
