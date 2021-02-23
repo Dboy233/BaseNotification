@@ -1,7 +1,5 @@
 package com.dboy.basenotification.notify;
 
-import androidx.core.app.NotificationCompat;
-
 import com.dboy.base.notify.view.BaseRemoteViews;
 import com.dboy.base.notify.view.ContentRemote;
 import com.dboy.basenotification.R;

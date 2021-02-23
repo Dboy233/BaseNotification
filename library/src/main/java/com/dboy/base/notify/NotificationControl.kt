@@ -8,11 +8,16 @@ import androidx.core.app.NotificationManagerCompat
 import com.dboy.base.notify.listener.PendingIntentListener
 import com.dboy.base.notify.utils.ContextUtil
 
+/**
+ * 通知控制器
+ */
 object NotificationControl {
 
 
-    val mNotificationManagerCompat: NotificationManagerCompat =
+    val mNotificationManagerCompat: NotificationManagerCompat by lazy {
         NotificationManagerCompat.from(ContextUtil.getApplication().baseContext)
+    }
+
 
     /**
      * 是否开启通知栏权限

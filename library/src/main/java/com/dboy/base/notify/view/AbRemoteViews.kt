@@ -12,12 +12,14 @@ import android.os.Parcel
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RemoteViews
+import androidx.annotation.RequiresApi
 import com.dboy.base.notify.BroadcastConstant.ACTION_NOTIFY_CLICK
 import com.dboy.base.notify.BroadcastConstant.ACTION_NOTIFY_CLICK_NOTIFY_ID
 import com.dboy.base.notify.BroadcastConstant.ACTION_NOTIFY_CLICK_VIEW_ID
 import com.dboy.base.notify.utils.ContextUtil
 import kotlin.math.abs
 
+@Suppress("unused")
 open class AbRemoteViews(packageName: String?, layoutId: Int) :
     RemoteViews(packageName, layoutId) {
 
@@ -142,6 +144,7 @@ open class AbRemoteViews(packageName: String?, layoutId: Int) :
         return this
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     open fun setOnClickResponse2(viewId: Int, response: RemoteResponse): AbRemoteViews {
         super.setOnClickResponse(viewId, response)
         return this
@@ -165,6 +168,7 @@ open class AbRemoteViews(packageName: String?, layoutId: Int) :
         return this
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     open fun setLightBackgroundLayoutId2(layoutId: Int): AbRemoteViews {
         super.setLightBackgroundLayoutId(layoutId)
         return this
@@ -226,10 +230,6 @@ open class AbRemoteViews(packageName: String?, layoutId: Int) :
         return this
     }
 
-    open fun clone2(): RemoteViews {
-        return super.clone()
-    }
-
     open fun setIntent2(viewId: Int, methodName: String?, value: Intent?): AbRemoteViews {
         super.setIntent(viewId, methodName, value)
         return this
@@ -253,11 +253,6 @@ open class AbRemoteViews(packageName: String?, layoutId: Int) :
         bottom: Int
     ): AbRemoteViews {
         super.setTextViewCompoundDrawables(viewId, left, top, right, bottom)
-        return this
-    }
-
-    open fun setRemoteAdapter2(appWidgetId: Int, viewId: Int, intent: Intent?): AbRemoteViews {
-        super.setRemoteAdapter(appWidgetId, viewId, intent)
         return this
     }
 

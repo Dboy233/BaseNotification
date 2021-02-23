@@ -19,14 +19,17 @@ abstract class BaseNotification<T : Any>(open var data: T) : IBaseNotify<T> {
      * Base上下文
      */
     private val mContext: Context = ContextUtil.getApplication()
+
     /**
      * Manager
      */
     private val mNotificationManagerCompat = NotificationControl.mNotificationManagerCompat
+
     /**
      *  通知栏构造器
      */
     private lateinit var mBuilder: NotificationCompat.Builder
+
     /**
      * 自定义视图管理类
      */
@@ -75,8 +78,8 @@ abstract class BaseNotification<T : Any>(open var data: T) : IBaseNotify<T> {
     /**
      * 获取srt类型的ChannelId 形式为 {你的app报名:getChannelId()}
      */
-    private fun getChannelIdStr():String {
-        return mContext.packageName +":"+ getChannelId()
+    private fun getChannelIdStr(): String {
+        return mContext.packageName + ":" + getChannelId()
     }
 
     /**
@@ -148,13 +151,18 @@ abstract class BaseNotification<T : Any>(open var data: T) : IBaseNotify<T> {
      * android.permission.FOREGROUND_SERVICE
      */
     override fun show(service: Service, foregroundServiceType: Int) {
-        show(service, foregroundServiceType, data)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            show(service, foregroundServiceType, data)
+        } else {
+            show(service, data)
+        }
     }
 
     /**
      * 显示为前台通知并设置 并配置数据
      * android.permission.FOREGROUND_SERVICE
      */
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun show(service: Service, foregroundServiceType: Int, data: T) {
         this.data = data
         convert(mBaseRemoteViews, data)
